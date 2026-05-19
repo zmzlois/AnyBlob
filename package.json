@@ -25,7 +25,7 @@
     "check": "biome check src"
   },
   "peerDependencies": {
-    "@vercel/blob": ">=0.20.0"
+    "@vercel/blob": ">=2.0.0"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.15",
