@@ -1,38 +1,38 @@
 {
-  "name": "vercel-blob-db",
-  "version": "0.1.0",
-  "description": "use vercel blob as a lightweight json database with drizzle-inspired syntax",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
-    }
-  },
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --dts",
-    "dev": "tsup src/index.ts --format esm,cjs --dts --watch",
-    "typecheck": "tsc --noEmit",
-    "example": "tsx examples/basic.ts",
-    "lint": "biome lint src",
-    "format": "biome format --write src",
-    "check": "biome check src"
-  },
-  "peerDependencies": {
-    "@vercel/blob": ">=2.0.0"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "^2.4.15",
-    "@types/node": "^25.9.0",
-    "@vercel/blob": "^2.4.0",
-    "tsup": "^8.0.0",
-    "tsx": "^4.22.2",
-    "typescript": "^5.0.0"
-  }
+   "name": "vercel-blob-db",
+   "version": "0.1.1",
+   "description": "use vercel blob as a lightweight json database with drizzle-inspired syntax",
+   "main": "dist/index.js",
+   "module": "dist/index.mjs",
+   "types": "dist/index.d.ts",
+   "exports": {
+      ".": {
+         "types": "./dist/index.d.ts",
+         "import": "./dist/index.mjs",
+         "require": "./dist/index.js"
+      }
+   },
+   "files": [
+      "dist"
+   ],
+   "scripts": {
+      "build": "tsup src/index.ts --format esm,cjs --dts",
+      "dev": "tsup src/index.ts --format esm,cjs --dts --watch",
+      "typecheck": "tsc --noEmit",
+      "example": "tsx examples/basic.ts",
+      "lint": "biome lint src",
+      "format": "biome format --write src",
+      "check": "biome check src"
+   },
+   "peerDependencies": {
+      "@vercel/blob": ">=2.0.0"
+   },
+   "devDependencies": {
+      "@biomejs/biome": "^2.4.15",
+      "@types/node": "^25.9.0",
+      "@vercel/blob": "^2.4.0",
+      "tsup": "^8.0.0",
+      "tsx": "^4.22.2",
+      "typescript": "^5.0.0"
+   }
 }
