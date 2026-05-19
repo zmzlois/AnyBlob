@@ -2,6 +2,7 @@
    "name": "vercel-blob-db",
    "version": "0.1.1",
    "description": "use vercel blob as a lightweight json database with drizzle-inspired syntax",
+  "license": "MIT",
    "main": "dist/index.js",
    "module": "dist/index.mjs",
    "types": "dist/index.d.ts",
