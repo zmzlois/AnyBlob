@@ -4,7 +4,7 @@
 [![npm downloads](https://img.shields.io/npm/dm/vercel-blob-db)](https://www.npmjs.com/package/vercel-blob-db)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0%2B-blue)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
-[![peer: @vercel/blob](https://img.shields.io/badge/peer-%40vercel%2Fblob-%E2%89%A50.20-black)](https://vercel.com/docs/storage/vercel-blob)
+[![peer: @vercel/blob](https://img.shields.io/badge/peer-%40vercel%2Fblob%20v2%2B-black)](https://vercel.com/docs/storage/vercel-blob)
 
 A lightweight database on top of [Vercel Blob](https://vercel.com/docs/storage/vercel-blob), with a [drizzle](https://orm.drizzle.team/)-inspired query API. No SQL, no migrations, no extra infrastructure — just your blob store.
 
