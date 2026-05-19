@@ -8,7 +8,6 @@
 
 A lightweight database on top of [Vercel Blob](https://vercel.com/docs/storage/vercel-blob), with a [drizzle](https://orm.drizzle.team/)-inspired query API. No SQL, no migrations, no extra infrastructure — just your blob store.
 
-> **Good for:** hobby projects, small SaaS, feature flags, config storage, prototyping.
 > **Not a replacement for** Postgres, PlanetScale, or any real database — every query reads and writes a JSON file.
 
 ---
