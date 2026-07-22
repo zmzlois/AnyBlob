@@ -1,7 +1,7 @@
 {
-  "name": "vercel-blob-db",
-  "version": "0.1.2",
-  "description": "use vercel blob as a lightweight json database with drizzle-inspired syntax",
+  "name": "blob-as-db",
+  "version": "0.1.5",
+  "description": "use vercel blob, s3, or r2 as a lightweight json database with drizzle-inspired syntax",
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -21,17 +21,27 @@
     "dev": "tsup src/index.ts --format esm,cjs --dts --watch",
     "typecheck": "tsc --noEmit",
     "example": "tsx examples/basic.ts",
-    "lint": "biome lint src",
-    "format": "biome format --write src",
-    "check": "biome check src"
+    "lint": "biome lint .",
+    "format": "biome check --write .",
+    "check": "biome check ."
   },
   "peerDependencies": {
-    "@vercel/blob": ">=2.0.0"
+    "@vercel/blob": ">=2.0.0",
+    "aws4fetch": ">=1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@vercel/blob": {
+      "optional": true
+    },
+    "aws4fetch": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.15",
     "@types/node": "^25.9.0",
     "@vercel/blob": "^2.4.0",
+    "aws4fetch": "^1.0.20",
     "tsup": "^8.0.0",
     "tsx": "^4.22.2",
     "typescript": "^5.0.0"
