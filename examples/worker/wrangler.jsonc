@@ -1,0 +1,15 @@
+// minimal worker config for the r2 binding example.
+// create the bucket first: pnpm exec wrangler r2 bucket create my-db
+// then run locally:        pnpm dev
+// or deploy:               pnpm run deploy
+{
+  "name": "blob-db-r2-example",
+  "main": "worker.ts",
+  "compatibility_date": "2026-07-01",
+  "r2_buckets": [
+    {
+      "binding": "DB_BUCKET",
+      "bucket_name": "my-db"
+    }
+  ]
+}
