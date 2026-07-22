@@ -53,7 +53,23 @@ export function createS3Adapter(config: S3Config): StorageAdapter {
       return { text: await res.text(), etag: res.headers.get("etag") }
     },
 
-    async write(pathname, body, etag) {
+    async create(pathname, body) {
+      const client = await loadClient()
+      const res = await client.fetch(`${baseUrl}/${encodeKey(pathname)}`, {
+        method: "PUT",
+        body,
+        headers: {
+          "content-type": "application/json",
+          "if-none-match": "*",
+        },
+      })
+      await res.body?.cancel()
+      if (res.status === 412) throw conflictError()
+      if (!res.ok)
+        throw new Error(`blob-db: s3 create failed with status ${res.status}`)
+    },
+
+    async update(pathname, body, etag) {
       const client = await loadClient()
       const res = await client.fetch(`${baseUrl}/${encodeKey(pathname)}`, {
         method: "PUT",
@@ -67,7 +83,7 @@ export function createS3Adapter(config: S3Config): StorageAdapter {
       await res.body?.cancel()
       if (res.status === 412) throw conflictError()
       if (!res.ok)
-        throw new Error(`blob-db: s3 write failed with status ${res.status}`)
+        throw new Error(`blob-db: s3 update failed with status ${res.status}`)
     },
 
     async delete(pathname) {
