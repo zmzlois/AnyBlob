@@ -1,8 +1,36 @@
-import { BlobPreconditionFailedError, get, put } from "@vercel/blob"
-import type { DbConfig } from "./types"
+import { createR2Adapter } from "./adapters/r2"
+import { createS3Adapter } from "./adapters/s3"
+import { createVercelBlobAdapter } from "./adapters/vercel-blob"
+import type { DbConfig, StorageAdapter } from "./types"
 
 function getPathname(tableName: string, config: DbConfig): string {
-  return `${config.prefix ?? "blob-db"}/${tableName}.json`
+  const prefix = (config.prefix ?? "blob-db").replace(/^\/+|\/+$/g, "")
+  return prefix ? `${prefix}/${tableName}.json` : `${tableName}.json`
+}
+
+const adapterCache = new WeakMap<DbConfig, StorageAdapter>()
+
+function resolveAdapter(config: DbConfig): StorageAdapter {
+  const cached = adapterCache.get(config)
+  if (cached) return cached
+
+  let adapter: StorageAdapter
+  switch (config.adapter) {
+    case "r2":
+      adapter = createR2Adapter(config)
+      break
+    case "s3":
+      adapter = createS3Adapter(config)
+      break
+    case "custom":
+      adapter = config.storage
+      break
+    default:
+      adapter = createVercelBlobAdapter(config)
+  }
+
+  adapterCache.set(config, adapter)
+  return adapter
 }
 
 interface ReadResult<T> {
@@ -15,22 +43,9 @@ export async function readTable<T>(
   config: DbConfig,
 ): Promise<ReadResult<T>> {
   const pathname = getPathname(tableName, config)
-
-  // useCache: false fetches directly from origin, bypassing the vercel blob cdn.
-  // required for read-modify-write correctness — cdn caches have a minimum ttl of ~60s
-  // and would return stale etags, causing spurious 412s on the next conditional write.
-  const result = await get(pathname, {
-    token: config.token,
-    access: config.access ?? "public",
-    useCache: false,
-  })
-
-  if (!result || !result.stream) return { data: [], etag: null }
-
-  const data = (await new Response(
-    result.stream as ReadableStream,
-  ).json()) as T[]
-  return { data, etag: result.blob.etag || null }
+  const { text, etag } = await resolveAdapter(config).read(pathname)
+  if (text === null) return { data: [], etag: null }
+  return { data: JSON.parse(text) as T[], etag }
 }
 
 export async function writeTable<T>(
@@ -40,30 +55,10 @@ export async function writeTable<T>(
   config: DbConfig,
 ): Promise<void> {
   const pathname = getPathname(tableName, config)
-  try {
-    await put(pathname, JSON.stringify(data), {
-      access: config.access ?? "public",
-      token: config.token,
-      contentType: "application/json",
-      addRandomSuffix: false,
-      allowOverwrite: true,
-      cacheControlMaxAge: 0,
-      // conditional write: only succeed if nobody else wrote since we read
-      ...(etag ? { ifMatch: etag } : {}),
-    })
-  } catch (e: unknown) {
-    if (e instanceof BlobPreconditionFailedError) {
-      const err = new Error(
-        "blob-db: write conflict — another write occurred concurrently",
-      ) as Error & { status: number }
-      err.status = 412
-      throw err
-    }
-    throw e
-  }
+  await resolveAdapter(config).write(pathname, JSON.stringify(data), etag)
 }
 
-// read-modify-write with optimistic locking via etag + x-if-match.
+// read-modify-write with optimistic locking via etag conditional writes.
 // retries up to maxRetries times when a concurrent write is detected (412).
 export async function withTable<T>(
   tableName: string,
