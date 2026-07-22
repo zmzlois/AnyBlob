@@ -2,7 +2,7 @@ import { DeleteBuilder } from "./builders/delete"
 import { InsertBuilder } from "./builders/insert"
 import { SelectBuilder } from "./builders/select"
 import { UpdateBuilder } from "./builders/update"
-import { readTable, withTable, writeTable } from "./storage"
+import { readTable, replaceTable, withTable } from "./storage"
 import type { DbConfig, TableDef, TableSchema, WithTableFn } from "./types"
 
 interface Snapshot {
@@ -37,8 +37,7 @@ export class TransactionDb {
   async rollback(): Promise<void> {
     await Promise.all(
       Array.from(this.snapshots.entries()).map(([tableName, { data }]) =>
-        // null etag = unconditional write, bypassing if-match for rollback
-        writeTable(tableName, data, null, this.config),
+        replaceTable(tableName, data, this.config),
       ),
     )
   }
