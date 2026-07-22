@@ -1,4 +1,4 @@
-# blob-as-db
+# any-blob-db
 
 [![npm version](https://img.shields.io/npm/v/vercel-blob-db)](https://www.npmjs.com/package/vercel-blob-db)
 [![npm downloads](https://img.shields.io/npm/dm/vercel-blob-db)](https://www.npmjs.com/package/vercel-blob-db)
@@ -6,7 +6,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![peer: @vercel/blob](https://img.shields.io/badge/peer-%40vercel%2Fblob%20v2%2B-black)](https://vercel.com/docs/storage/vercel-blob)
 
-A lightweight database on top of [Vercel Blob](https://vercel.com/docs/storage/vercel-blob) or [Cloudflare R2](https://developers.cloudflare.com/r2/), with a [drizzle](https://orm.drizzle.team/)-inspired query API. No SQL, no migrations, no extra infrastructure — just your blob store.
+A lightweight database on top of [Vercel Blob](https://vercel.com/docs/storage/vercel-blob) or [Cloudflare R2](https://developers.cloudflare.com/r2/), with a [drizzle](https://orm.drizzle.team/)-inspired query API. No SQL, no migrations, no extra infrastructure — just your blob store. When we are prototyping, or the I/O traffic is low... why should we pay and spin up database anyways? Swap to drizzle and production postgres/mysql whenever you are ready.
+
+This package turn any storage into a database.
 
 > **Not a replacement for** Postgres, PlanetScale, or any real database — every query reads and writes a JSON file.
 
@@ -15,9 +17,9 @@ A lightweight database on top of [Vercel Blob](https://vercel.com/docs/storage/v
 ## install
 
 ```bash
-npm install vercel-blob-db @vercel/blob   # vercel blob (default adapter)
-npm install vercel-blob-db                # cloudflare r2 via workers binding — no extra deps
-npm install vercel-blob-db aws4fetch      # cloudflare r2 / s3 over http from anywhere
+npm install any-blob-db @vercel/blob   # vercel blob (default adapter)
+npm install any-blob-db                # cloudflare r2 via workers binding — no extra deps
+npm install any-blob-db aws4fetch      # cloudflare r2 / s3 over http from anywhere
 ```
 
 Only the peer dependency for the adapter you use needs to be installed — the others are never loaded.

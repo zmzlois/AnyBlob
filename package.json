@@ -1,5 +1,5 @@
 {
-  "name": "blob-as-db",
+  "name": "any-blob-db",
   "version": "0.1.5",
   "description": "use vercel blob, s3, or r2 as a lightweight json database with drizzle-inspired syntax",
   "license": "MIT",
