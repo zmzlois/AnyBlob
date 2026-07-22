@@ -49,5 +49,11 @@ export function createVercelBlobAdapter(
         throw e
       }
     },
+
+   
+    async delete(pathname) {
+      const { del } = await loadBlob()
+      await del(pathname, { token: config.token })
+    },
   }
 }
