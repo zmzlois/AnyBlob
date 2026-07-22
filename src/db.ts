@@ -2,7 +2,7 @@ import { DeleteBuilder } from "./builders/delete"
 import { InsertBuilder } from "./builders/insert"
 import { SelectBuilder } from "./builders/select"
 import { UpdateBuilder } from "./builders/update"
-import { withTable } from "./storage"
+import { wipeTable, withTable } from "./storage"
 import { TransactionDb } from "./transaction"
 import type { DbConfig, TableDef, TableSchema, WithTableFn } from "./types"
 
@@ -29,8 +29,6 @@ export function createDb(config: DbConfig) {
       return new DeleteBuilder(table, defaultWithTable)
     },
 
-    // not acid — other readers may see partial state during execution,
-    // but all touched tables are restored to their pre-tx state on error
     async transaction<T>(fn: (tx: TransactionDb) => Promise<T>): Promise<T> {
       const tx = new TransactionDb(config)
       try {
@@ -42,7 +40,7 @@ export function createDb(config: DbConfig) {
     },
 
     async wipe(...tables: Array<{ _name: string }>): Promise<void> {
-      await Promise.all(tables.map((t) => defaultWithTable(t._name, () => [])))
+      await Promise.all(tables.map((t) => wipeTable(t._name, config)))
     },
   }
 }
