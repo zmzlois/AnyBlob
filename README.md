@@ -1,7 +1,7 @@
 # AnyBlob
 
 [![npm version](https://img.shields.io/npm/v/anyblob)](https://www.npmjs.com/package/anyblob)
-[![npm downloads](https://img.shields.io/npm/dm/anyblob)](https://www.npmjs.com/package/anyblob)
+<!-- [![npm downloads](https://img.shields.io/npm/dm/anyblob)](https://www.npmjs.com/package/anyblob) -->
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0%2B-blue)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![peer: @vercel/blob](https://img.shields.io/badge/peer-%40vercel%2Fblob%20v2%2B-black)](https://vercel.com/docs/storage/vercel-blob)
