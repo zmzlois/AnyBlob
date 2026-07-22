@@ -55,11 +55,37 @@ export async function writeTable<T>(
   config: DbConfig,
 ): Promise<void> {
   const pathname = getPathname(tableName, config)
-  await resolveAdapter(config).write(pathname, JSON.stringify(data), etag)
+  const adapter = resolveAdapter(config)
+  const body = JSON.stringify(data)
+  if (etag === null) {
+    await adapter.create(pathname, body)
+  } else {
+    await adapter.update(pathname, body, etag)
+  }
 }
 
-// read-modify-write with optimistic locking via etag conditional writes.
-// retries up to maxRetries times when a concurrent write is detected (412).
+export async function replaceTable<T>(
+  tableName: string,
+  data: T[],
+  config: DbConfig,
+): Promise<void> {
+  const pathname = getPathname(tableName, config)
+  await resolveAdapter(config).update(pathname, JSON.stringify(data), null)
+}
+
+export async function wipeTable(
+  tableName: string,
+  config: DbConfig,
+): Promise<void> {
+  const pathname = getPathname(tableName, config)
+  const adapter = resolveAdapter(config)
+  if (adapter.delete) {
+    await adapter.delete(pathname)
+  } else {
+    await adapter.update(pathname, "[]", null)
+  }
+}
+
 export async function withTable<T>(
   tableName: string,
   config: DbConfig,
